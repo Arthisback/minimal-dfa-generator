@@ -58,9 +58,14 @@ Build and execution instructions will be added once the project setup is complet
 
 Tests will be developed to verify input parsing, DFA generation, error-state handling, state reachability, and automaton minimality.
 
+## Scientific Paper
+
+The paper for this tool can be found at: https://docs.google.com/document/d/126fP6WipRx8Xs2B8v6HginA7noqyFThm/edit?usp=sharing&ouid=106734834979353198765&rtpof=true&sd=true
+
 ## Authors
 
-Add the project contributors here.
+Arthur Antonio Bertoglio
+Davi Augusto Marangoni Mocva
 
 ## Academic Context
 
