@@ -64,7 +64,7 @@ ok
 runghc Main.hs input-file.txt
 ```
 
-You can use [input-file.txt](/home/arthur1/Projects/minimal-dfa-generator/minimal-dfa-generator/input-file.txt) as a starting point.
+You can use [input-file.txt] as a starting point.
 
 ## Expected Output (Example)
 
@@ -104,10 +104,7 @@ ERR | ERR | ERR | ERR | ERR
 - In the final complete DFA, all transitions are defined for all symbols.
 - State labels in DFA tables are compact aliases (`M0`, `M1`, ...) with a legend.
 
-## Project Files
 
-- Main implementation: [Main.hs](/home/arthur1/Projects/minimal-dfa-generator/minimal-dfa-generator/Main.hs)
-- Example input: [input-file.txt](/home/arthur1/Projects/minimal-dfa-generator/minimal-dfa-generator/input-file.txt)
 
 ## Scientific Paper
 
