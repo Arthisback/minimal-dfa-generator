@@ -1,71 +1,122 @@
-# minimal-dfa-generator
 # Minimal DFA Generator
 
-A Haskell project for generating minimal Deterministic Finite Automata (DFAs) from token specifications and Regular Grammars (RGs).
+Haskell project that reads tokens and regular grammars (RGs), builds a single NFA, determinizes it, minimizes the DFA (without equivalence-class partitioning), and finally adds an explicit error state.
 
-## Overview
+## Features
 
-This project aims to develop a tool that processes input files containing token specifications or regular grammars and generates a minimal Deterministic Finite Automaton (DFA).
+- Parses an input file with:
+  - token lines
+  - grammar lines in the form `<S> ::= a<A> | ε`
+- Builds **one combined NFA**:
+  - shared initial state `S`
+  - token paths with fresh states
+  - grammar transitions merged into the same automaton
+- Builds DFA using subset construction
+- Minimizes DFA using a reverse/determinize strategy (Brzozowski-style)
+- Adds explicit `ERR` sink state after minimization:
+  - all missing transitions point to `ERR`
+  - `ERR` loops to itself for all symbols
+- Prints aligned transition tables for:
+  - NFA
+  - DFA
+  - Minimized DFA
+  - Minimized DFA + Error state
 
-The generated automaton is intended to include an explicit error state and to be free of unreachable and dead states, without relying on state equivalence classes for minimization.
+## Input Format
 
-## Objectives
+Each non-empty line is either:
 
-- Parse input files containing token specifications or Regular Grammars (RGs).
-- Generate Deterministic Finite Automata (DFAs).
-- Produce minimal automata without equivalence-class-based minimization.
-- Handle invalid transitions through an explicit error state.
-- Ensure that the generated automaton contains no unreachable or dead states.
-- Validate the generated automata through testing.
+1. **Token** (line does not start with `<`)
+2. **Grammar production** (line starts with `<`)
 
-## Planned Features
+### Grammar syntax
 
-- *Input Processing:* Read and interpret supported input file formats.
-- *Automaton Generation:* Construct a DFA from the provided input.
-- *Error-State Handling:* Represent invalid transitions using an explicit error state.
-- *State Validation:* Identify and handle unreachable and dead states.
-- *Automaton Minimality:* Generate a minimal DFA without applying state equivalence classes.
+```
+<NonTerminal> ::= a<OtherNonTerminal> | b | ε
+```
 
-## Technology Stack
+Supported right-hand alternatives:
 
-- *Language:* Haskell
-- 
+- `a<NT>` terminal + destination non-terminal
+- `a` terminal-only transition
+- `ε` epsilon (marks current non-terminal state as final)
 
-## Project Structure
+## Example Input
 
-The project structure will be defined as the implementation evolves.
+```txt
+ok
+<S> ::= o<K> | a<A> | ε
+<K> ::= k
+<A> ::= b<A>
+<Z> ::= x<Z> | ε
+```
 
-## Getting Started
+## Running
 
 ### Prerequisites
 
-Install the Glasgow Haskell Compiler (GHC).
+- GHC (Glasgow Haskell Compiler)
+- `runghc` available in PATH
 
-### Installation
+### Execute
 
-Clone the repository:
+```bash
+runghc Main.hs input-file.txt
+```
 
-bash
-git clone <git@github.com:Arthisback/minimal-dfa-generator.git>
-cd minimal-dfa-generator
+You can use [input-file.txt](/home/arthur1/Projects/minimal-dfa-generator/minimal-dfa-generator/input-file.txt) as a starting point.
 
+## Expected Output (Example)
 
-### Build and Run
+The program prints 4 transition tables in sequence:
 
-Build and execution instructions will be added once the project setup is complete.
+1. `NFA`
+2. `DFA`
+3. `Minimized DFA`
+4. `Minimized DFA + Error state`
 
-## Testing
+Example snippet (abridged):
 
-Tests will be developed to verify input parsing, DFA generation, error-state handling, state reachability, and automaton minimality.
+```txt
+NFA:
+δ  | a | b | k | o
+------------------
+*S | C |   |   | A,D
+...
+
+DFA:
+δ   | a  | b  | k  | o
+----------------------
+*M0 | M1 |    |    | M2
+...
+
+Minimized DFA + Error state:
+δ   | a   | b   | k   | o
+-------------------------
+*M0 | ERR | ERR | ERR | M1
+...
+ERR | ERR | ERR | ERR | ERR
+```
+
+## Notes on Automata Properties
+
+- The final `ERR` state is intentionally a sink state.
+- In the final complete DFA, all transitions are defined for all symbols.
+- State labels in DFA tables are compact aliases (`M0`, `M1`, ...) with a legend.
+
+## Project Files
+
+- Main implementation: [Main.hs](/home/arthur1/Projects/minimal-dfa-generator/minimal-dfa-generator/Main.hs)
+- Example input: [input-file.txt](/home/arthur1/Projects/minimal-dfa-generator/minimal-dfa-generator/input-file.txt)
 
 ## Scientific Paper
 
-The paper for this tool can be found at: https://docs.google.com/document/d/126fP6WipRx8Xs2B8v6HginA7noqyFThm/edit?usp=sharing&ouid=106734834979353198765&rtpof=true&sd=true
+https://docs.google.com/document/d/126fP6WipRx8Xs2B8v6HginA7noqyFThm/edit?usp=sharing&ouid=106734834979353198765&rtpof=true&sd=true
 
 ## Authors
 
-Arthur Antonio Bertoglio
-Davi Augusto Marangoni Mocva
+- Arthur Antonio Bertoglio
+- Davi Augusto Marangoni Mocva
 
 ## Academic Context
 
@@ -73,6 +124,10 @@ Computer Science
 Universidade Federal da Fronteira Sul (UFFS)  
 Chapecó Campus, Brazil
 
+## AI Disclosure
+
+Parts of this project (including code and documentation refinements) were developed with assistance from AI tooling.
+
 ## License
 
-his project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).

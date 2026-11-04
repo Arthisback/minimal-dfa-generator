@@ -1,5 +1,9 @@
-se
-entao
-senao
-<S> ::= a<A> | e<A> | i<A> | o<A> | u<A>
-<A> ::= a<A> | e<A> | i<A> | o<A> | u<A> | ε
+ok
+<S> ::= o<K> | a<A> | ε
+<K> ::= k
+<A> ::= b<A>
+<Z> ::= x<Z> | ε
+celta
+selta
+trintaesete
+<A> ::= b<A> | a<A>  |  ε
